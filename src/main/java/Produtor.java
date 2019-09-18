@@ -1,17 +1,13 @@
-import java.awt.Image;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -43,55 +39,44 @@ public class Produtor extends Thread {
 		try {
 			Document doc = Jsoup.parse(html);
 			Elements elements = doc.getElementsByTag("img");
-
 			for (Element e : elements) {
 				String str = e.toString();
-				Pattern p = Pattern.compile("\"(.*?)\"");
+				Pattern p = Pattern.compile("(<img\\b|(?!^)\\G)[^>]*?\\b(src)=([\"']?)([^\"]*)\\3");
 				Matcher m = p.matcher(str);
 
-				URL urlImage;
-				Image img;
+//				URL urlImage;
+//				Image img;
+				String href = e.attr("href");
 
+				href = processLink(href, this.myURL.toString());
 				if (m.find()) {
+					String urlAcess = "";
+					if (m.group(4).startsWith("https") || m.group(2).startsWith("http")) {
+						urlAcess = m.group(4);
+						System.out.println("Thread " + numero + ' ' + m.group(2) + ": " + m.group(4));
 
-					if (!m.group(1).startsWith("https") || !m.group(1).startsWith("http")) {
-
-						String href = e.attr("href");
-						href = processLink(href, this.myURL.toString());
-
-						System.out.println(href + m.group(1));
-						try {
-							urlImage = new URL(href + m.group(1));
-							img = ImageIO.read(urlImage);
-//							JFrame frame = new JFrame();
-//							frame.setSize(300, 300);
-//							JLabel label = new JLabel(new ImageIcon(img));
-//							frame.add(label);
-//							frame.setVisible(true);
-						} catch (Exception e1) {
-							System.out.println("URL da imagem mal formada");
-						}
-					} else {
-//						System.out.println(m.group(1));
-						try {
-							urlImage = new URL(m.group(1));
-							img = ImageIO.read(urlImage);
-//							JFrame frame = new JFrame();
-//							frame.setSize(300, 300);
-//							JLabel label = new JLabel(new ImageIcon(img));
-//							frame.add(label);
-//							frame.setVisible(true);
-						} catch (Exception e2) {
-							System.out.println("URL da imagem mal formada");
-						}
+					} else if (m.group(4).startsWith("//")) {
+						urlAcess = "https:" + m.group(4);
+						System.out.println("Thread " + numero + ' ' + m.group(2) + ": " + "https:" + m.group(4));
 
 					}
-				}
-			}
+					
+					try (InputStream in = new URL(urlAcess).openStream()) {
+						Random r = new Random();
+						Files.copy(in,
+								Paths.get("D:\\Projetos\\Eclipse\\jsf\\web-crawler\\src\\main\\resources\\donwloads\\ "
+										+ "-URL" + r.ints(1, 0, 10000) + ".png"));
 
+						System.out.println("Imagem salva");
+					} catch (Exception ignore) {
+					}
+
+				}
+				Thread.sleep(0100);
+			}
 		} catch (Exception e) {
-			Thread.yield();
-			
+			System.out.println("Thread" + numero + "Erro");
+
 		}
 	}
 
