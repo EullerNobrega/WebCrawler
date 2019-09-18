@@ -7,7 +7,7 @@ import java.net.URL;
 public class Main {
 
 	public static void main(String[] args) throws IOException, InterruptedException {
-		String pathname = "src\\main\\resources\\urls_random_images";
+		String pathname = "/home/euller/projetos/WebCrawler/src/main/resources/urls_random_images";
 		File arq = new File(pathname);
 		
 		Produtor p;

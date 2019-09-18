@@ -3,9 +3,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,6 +14,7 @@ import org.jsoup.select.Elements;
 public class Produtor extends Thread {
 	private URL myURL;
 	private int numero;
+	Consumidor cons;
 
 	public Produtor(URL myURL, int numero) {
 		super();
@@ -31,7 +29,7 @@ public class Produtor extends Thread {
 		/*
 		 * 
 		 * for(int i=0; i<50;i++) { System.out.println("Thread " + numero + " ---> " +
-		 * i); COMPROVAÇÃO DA PROGRAMAÇÃO PARALELA try { Thread.sleep(1000); } catch
+		 * i); COMPROVAï¿½ï¿½O DA PROGRAMAï¿½ï¿½O PARALELA try { Thread.sleep(1000); } catch
 		 * (InterruptedException e) { // TODO Auto-generated catch block
 		 * e.printStackTrace(); } }
 		 */
@@ -41,6 +39,7 @@ public class Produtor extends Thread {
 			Elements elements = doc.getElementsByTag("img");
 			for (Element e : elements) {
 				String str = e.toString();
+				System.out.println(str);
 				Pattern p = Pattern.compile("(<img\\b|(?!^)\\G)[^>]*?\\b(src)=([\"']?)([^\"]*)\\3");
 				Matcher m = p.matcher(str);
 
@@ -59,18 +58,13 @@ public class Produtor extends Thread {
 						urlAcess = "https:" + m.group(4);
 						System.out.println("Thread " + numero + ' ' + m.group(2) + ": " + "https:" + m.group(4));
 
+					} else if (m.group(4).startsWith("/")) {
+						urlAcess = href + m.group(4);
 					}
 					
-					try (InputStream in = new URL(urlAcess).openStream()) {
-						Random r = new Random();
-						Files.copy(in,
-								Paths.get("D:\\Projetos\\Eclipse\\jsf\\web-crawler\\src\\main\\resources\\donwloads\\ "
-										+ "-URL" + r.ints(1, 0, 10000) + ".png"));
-
-						System.out.println("Imagem salva");
-					} catch (Exception ignore) {
-					}
-
+					BufferImg b = BufferImg.getInstance();
+					b.getListBuffer().add(urlAcess);
+					
 				}
 				Thread.sleep(0100);
 			}

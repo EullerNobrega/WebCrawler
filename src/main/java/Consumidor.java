@@ -1,27 +1,28 @@
-import java.io.BufferedInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Random;
 
 public class Consumidor extends Thread{
-	private Thread threadImg;
 	
-	public void verificaBuffer() {
-		
+	public Consumidor() {
+		this.start();
 	}
 	
-	public void download(String url) {
-		try {
-			BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
-			FileOutputStream fos = new FileOutputStream("Imagem " + ".png");
-			byte dataBuffer[] = new byte[1024];
-			int bytesRead;
-			
-			while((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
-				fos.write(dataBuffer, 0, bytesRead);
-			}
-		}catch (IOException e) {
-			System.out.println(e.getMessage());
+//	public void verificaBuffer() {
+//		
+//	}
+	
+	public void download(String urlAcess) {
+		try (InputStream in = new URL(urlAcess).openStream()) {
+			Random r = new Random();
+			Files.copy(in, Paths.get("/home/euller/projetos/WebCrawler/src/main/resources/downloads/ "
+					+ "Img" + r.ints(1, 0, 10000) + ".png"));
+
+			System.out.println("Imagem salva");
+			Thread.sleep(0100);
+		} catch (Exception ignore) {
 		}
 	}
 }
