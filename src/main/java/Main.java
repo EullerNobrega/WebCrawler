@@ -7,7 +7,7 @@ import java.net.URL;
 public class Main {
 
 	public static void main(String[] args) throws IOException, InterruptedException {
-		String pathname = "src\\main\\resources\\urls_random_images";
+		String pathname = "/home/euller/eclipse-workspace/WEBCRAWLER/WebCrawler/src/main/resources/urls_random_images";
 		File arq = new File(pathname);
 		
 		Produtor p;
@@ -15,6 +15,9 @@ public class Main {
 
 		BufferedReader br = new BufferedReader(new FileReader(arq));
 		String urlLinha;
+		
+		
+		Consumidor consumidor = new Consumidor(BufferImg.getInstance());
 
 		while ((urlLinha = br.readLine()) != null) {
 			p = new Produtor(new URL(urlLinha), numero);

@@ -8,8 +8,10 @@ public class BufferImg {
 
 	public static BufferImg getInstance() {
 		if(instace == null) {
+			System.out.println("Buffer Compartilhado Aberto");
 			instace = new BufferImg();
 			ListBuffer = new ArrayList<String>();
+			return instace;
 		}
 		return instace;
 	}

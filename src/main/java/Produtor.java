@@ -21,9 +21,10 @@ public class Produtor extends Thread {
 		this.myURL = myURL;
 		this.numero = numero;
 		this.start();
+		System.out.println("Produtor Iniciado");
 	}
 
-	public void run() {
+	public synchronized void run() {
 		String html = getHTML(this.myURL.toString());
 
 		/*
@@ -39,7 +40,6 @@ public class Produtor extends Thread {
 			Elements elements = doc.getElementsByTag("img");
 			for (Element e : elements) {
 				String str = e.toString();
-				System.out.println(str);
 				Pattern p = Pattern.compile("(<img\\b|(?!^)\\G)[^>]*?\\b(src)=([\"']?)([^\"]*)\\3");
 				Matcher m = p.matcher(str);
 
@@ -66,7 +66,6 @@ public class Produtor extends Thread {
 					b.getListBuffer().add(urlAcess);
 					
 				}
-				Thread.sleep(0100);
 			}
 		} catch (Exception e) {
 			System.out.println("Thread" + numero + "Erro");

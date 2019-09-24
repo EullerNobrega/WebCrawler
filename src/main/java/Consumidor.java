@@ -4,26 +4,25 @@ public class Consumidor extends Thread {
 	private ThreadDonwload td;
 	private int qtdImgBuffer, qtdAtual;
 
-	public Consumidor() {
+	public Consumidor(BufferImg buffer) {
 		this.start();
-		this.buffer = BufferImg.getInstance();
+		this.buffer = buffer;
+		System.out.println("Consumidor Iniciado");
 		this.qtdImgBuffer = 0;
 
 	}
 
-	public void run() {
+	public synchronized void run() {
 		while (true) {
 			qtdImgBuffer = buffer.getListBuffer().size();
 			if (qtdImgBuffer == qtdAtual) {
 				System.out.println("Sem novas Imgs");
 			} else if (qtdImgBuffer > qtdAtual) {
 				td = new ThreadDonwload(buffer.getListBuffer().get(qtdImgBuffer - 1));
+				System.out.println("Nova Imagem adicionada");
 				this.qtdAtual++;
-			}
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			}else {
+				System.out.println("QtdImgBuffer = " + qtdImgBuffer);
 			}
 		}
 	}

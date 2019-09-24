@@ -10,17 +10,17 @@ public class ThreadDonwload extends Thread {
 	
 	public ThreadDonwload(String urlAcess) {
 		this.start();
+		System.out.println("Nova Thread Download Iniciada");
 		this.urlAcess = urlAcess;
 	}
 	
-	public void run() {
+	public synchronized void run() {
 		try (InputStream in = new URL(urlAcess).openStream()) {
 			Random r = new Random();
-			Files.copy(in, Paths.get("/home/euller/projetos/WebCrawler/src/main/resources/downloads/ " + "Img"
+			Files.copy(in, Paths.get("/home/euller/eclipse-workspace/WEBCRAWLER/WebCrawler/src/main/resources/donwloads/ " + "Img"
 					+ r.ints(1, 0, 10000) + ".png"));
 
 			System.out.println("Imagem salva");
-			Thread.sleep(0100);
 		} catch (Exception ignore) {
 		}
 	}
