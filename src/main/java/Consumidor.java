@@ -5,10 +5,10 @@ public class Consumidor extends Thread {
 	private int qtdImgBuffer, qtdAtual;
 
 	public Consumidor(BufferImg buffer) {
-		this.start();
 		this.buffer = buffer;
-		System.out.println("Consumidor Iniciado");
 		this.qtdImgBuffer = 0;
+		this.start();
+		System.out.println("Consumidor Iniciado");
 
 	}
 
@@ -16,7 +16,7 @@ public class Consumidor extends Thread {
 		while (true) {
 			qtdImgBuffer = buffer.getListBuffer().size();
 			if (qtdImgBuffer == qtdAtual) {
-				System.out.println("Sem novas Imgs");
+//				System.out.println("Sem novas Imgs");
 			} else if (qtdImgBuffer > qtdAtual) {
 				td = new ThreadDonwload(buffer.getListBuffer().get(qtdImgBuffer - 1));
 				System.out.println("Nova Imagem adicionada");

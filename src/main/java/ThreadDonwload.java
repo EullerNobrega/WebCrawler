@@ -17,7 +17,7 @@ public class ThreadDonwload extends Thread {
 	public synchronized void run() {
 		try (InputStream in = new URL(urlAcess).openStream()) {
 			Random r = new Random();
-			Files.copy(in, Paths.get("/home/euller/eclipse-workspace/WEBCRAWLER/WebCrawler/src/main/resources/donwloads/ " + "Img"
+			Files.copy(in, Paths.get("/web-crawler/src/main/resources/donwloads/ " + "Img"
 					+ r.ints(1, 0, 10000) + ".png"));
 
 			System.out.println("Imagem salva");

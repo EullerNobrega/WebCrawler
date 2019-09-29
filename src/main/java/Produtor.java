@@ -14,12 +14,14 @@ import org.jsoup.select.Elements;
 public class Produtor extends Thread {
 	private URL myURL;
 	private int numero;
+	BufferImg buffer;
 	Consumidor cons;
 
-	public Produtor(URL myURL, int numero) {
+	public Produtor(URL myURL, int numero, BufferImg buffer) {
 		super();
 		this.myURL = myURL;
 		this.numero = numero;
+		this.buffer = buffer;
 		this.start();
 		System.out.println("Produtor Iniciado");
 	}
@@ -61,10 +63,9 @@ public class Produtor extends Thread {
 					} else if (m.group(4).startsWith("/")) {
 						urlAcess = href + m.group(4);
 					}
-					
-					BufferImg b = BufferImg.getInstance();
-					b.getListBuffer().add(urlAcess);
-					
+
+					buffer.getListBuffer().add(urlAcess);
+
 				}
 			}
 		} catch (Exception e) {
@@ -74,7 +75,6 @@ public class Produtor extends Thread {
 	}
 
 	private String getHTML(String url) {
-
 		URL u;
 		try {
 			u = new URL(url);
